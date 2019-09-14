@@ -1,0 +1,27 @@
+.storyline {
+    height: 100%;
+}
+
+.post {
+    position: absolute;
+    cursor: pointer;
+    font-size: 24px;
+}
+
+.post:hover {
+    transform: scale(2);
+    transition: 0.25s all ease-in-out;
+    z-index: 10;
+}
+
+.day {
+    position: absolute;
+}
+
+.date {
+    position: absolute;
+}
+
+.year {
+    opacity: 0.3;
+}

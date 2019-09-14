@@ -1,17 +1,17 @@
 export interface ServerPost {
-    award: number
+    // award: number
     comments: number
     createdUtc: number
-    over18: boolean
-    pinned: boolean
-    pwls: number
+    // over18: boolean
+    // pinned: boolean
+    // pwls: number
     score: number
-    subs: number
-    text: number
-    thumbnail: string
+    // subs: number
+    // text: number
+    // thumbnail: string
     title: string
     url: string
-    wls: number
+    // wls: number
 }
 
 export type Gender = "m" | "f" | "r"
@@ -20,10 +20,11 @@ export interface Post {
     createdUtc: Date
     score: number
     url: string
-    textLength: number
     age?: number
     fromGender?: Gender
     toGender?: Gender
+    title: string
+    comments: number
 }
 
 const metaRegex = /\[([m,f])4([m,f])]/gim
@@ -49,6 +50,7 @@ export function serverPostToClient(post: ServerPost): Post {
             ? (fromGender.toLowerCase() as Gender)
             : undefined,
         toGender: toGender ? (toGender.toLowerCase() as Gender) : undefined,
-        textLength: post.text,
+        title: post.title,
+        comments: post.comments,
     }
 }

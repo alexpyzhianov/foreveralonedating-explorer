@@ -1,7 +1,8 @@
 import React from "react"
 import axios from "axios"
 import { Post, ServerPost, serverPostToClient, filterGood } from "./shape"
-import { ReactVis } from "./ReactViz"
+import { Storyline } from "./StoryLine"
+import "./App.css"
 
 function App() {
     const [posts, setPosts] = React.useState<Post[]>([])
@@ -16,9 +17,7 @@ function App() {
             )
     }, [])
 
-    console.log(posts.length)
-
-    return <ReactVis posts={posts} />
+    return posts.length > 0 ? <Storyline posts={posts} /> : null
 }
 
 export default App
