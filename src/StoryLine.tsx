@@ -4,6 +4,7 @@ import startOfDay from "date-fns/startOfDay"
 import format from "date-fns/format"
 import { Post, Gender } from "./shape"
 import { scaleLinear, scaleTime } from "d3-scale"
+import useComponentSize from "@rehooks/component-size"
 import styles from "./StoryLine.module.css"
 
 export interface StorylineProps {
@@ -33,26 +34,30 @@ function getEmoji(age: number, gender: Gender) {
 }
 
 export const Storyline: React.FC<StorylineProps> = ({ posts }) => {
+    const containerRef = React.useRef<HTMLDivElement>(null)
+    const containerSize = useComponentSize(containerRef)
     const daysMap = group(posts, p => startOfDay(p.createdUtc).valueOf())
     const days = Array.from(daysMap).sort(([a], [b]) => b - a)
 
     const commentsExtent = extent(posts, p => p.comments) as [number, number]
     const scoreExtent = extent(posts, p => p.score) as [number, number]
 
+    console.log(containerSize)
+
     const dayScale = scaleTime()
         .domain([days[0][0], days[days.length - 1][0]])
-        .range([0, days.length * 40])
+        .range([16, days.length * 40])
 
     const verticalScale = scaleLinear()
         .domain(scoreExtent)
-        .range([60, window.innerHeight - 60])
+        .range([60, containerSize ? containerSize.height - 60 : 600])
 
     const sizeScale = scaleLinear()
         .domain(commentsExtent)
         .range([18, 60])
 
     return (
-        <div className={styles.storyline}>
+        <div className={styles.storyline} ref={containerRef}>
             {days.map(([date]) => {
                 return (
                     <div
