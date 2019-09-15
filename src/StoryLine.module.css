@@ -1,17 +1,25 @@
 .storyline {
     height: 100%;
+    user-select: none;
 }
 
 .post {
     position: absolute;
     cursor: pointer;
     font-size: 24px;
+    border-radius: 100%;
+    transition: 0.25s transform ease-in-out;
 }
 
-.post:hover {
+.post:hover,
+.post:focus {
     transform: scale(2);
-    transition: 0.25s all ease-in-out;
     z-index: 10;
+}
+
+.post:focus {
+    outline: none;
+    border: 1px solid gray;
 }
 
 .day {

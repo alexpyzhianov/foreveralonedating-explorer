@@ -6,6 +6,7 @@ import { Post, Gender } from "./shape"
 import { scaleLinear, scaleTime } from "d3-scale"
 import useComponentSize from "@rehooks/component-size"
 import styles from "./StoryLine.module.css"
+import { Tooltip } from "./Tooltip"
 
 export interface StorylineProps {
     posts: Post[]
@@ -36,13 +37,12 @@ function getEmoji(age: number, gender: Gender) {
 export const Storyline: React.FC<StorylineProps> = ({ posts }) => {
     const containerRef = React.useRef<HTMLDivElement>(null)
     const containerSize = useComponentSize(containerRef)
+    const [tooltip, setTooltip] = React.useState<Post | null>(null)
     const daysMap = group(posts, p => startOfDay(p.createdUtc).valueOf())
     const days = Array.from(daysMap).sort(([a], [b]) => b - a)
 
     const commentsExtent = extent(posts, p => p.comments) as [number, number]
     const scoreExtent = extent(posts, p => p.score) as [number, number]
-
-    console.log(containerSize)
 
     const dayScale = scaleTime()
         .domain([days[0][0], days[days.length - 1][0]])
@@ -83,13 +83,14 @@ export const Storyline: React.FC<StorylineProps> = ({ posts }) => {
                         .map(p => (
                             <div
                                 key={p.url}
+                                tabIndex={0}
                                 className={styles.post}
                                 style={{
                                     top: verticalScale(p.score),
                                     fontSize: sizeScale(p.comments),
                                 }}
-                                title={`${p.title} - ⬆️(${p.score}) 💬(${p.comments})`}
-                                onClick={() => window.open(p.url, "_blank")}
+                                onFocus={() => setTooltip(p)}
+                                onBlur={() => setTooltip(null)}
                             >
                                 {getEmoji(
                                     p.age as number, // handled by filter
@@ -99,6 +100,17 @@ export const Storyline: React.FC<StorylineProps> = ({ posts }) => {
                         ))}
                 </div>
             ))}
+
+            {tooltip && (
+                <Tooltip
+                    top={verticalScale(tooltip.score) + 60}
+                    left={dayScale(tooltip.createdUtc) + 60}
+                    comments={tooltip.comments}
+                    score={tooltip.score}
+                    title={tooltip.title}
+                    url={tooltip.url}
+                />
+            )}
         </div>
     )
 }
