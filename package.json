@@ -1,7 +1,8 @@
 {
     "name": "reddit-diagram",
     "version": "0.1.0",
-    "private": true,
+    "private": false,
+    "homepage": "https://pyzhianov.github.io/foreveralonedating-explorer/",
     "dependencies": {
         "@rehooks/component-size": "^1.0.3",
         "@types/d3-array": "^2.0.0",
@@ -11,14 +12,14 @@
         "date-fns": "^2.2.1",
         "react": "^16.9.0",
         "react-dom": "^16.9.0",
-        "react-scripts": "3.1.1",
-        "react-vis": "^1.11.7",
-        "resize-observer-polyfill": "^1.5.1"
+        "react-scripts": "3.1.1"
     },
     "scripts": {
         "start": "react-scripts start",
         "build": "react-scripts build",
         "test": "react-scripts test",
+        "predeploy": "npm run build",
+        "deploy": "gh-pages -d build",
         "eject": "react-scripts eject"
     },
     "eslintConfig": {
@@ -40,7 +41,7 @@
         "@types/d3-scale": "^2.1.1",
         "@types/react": "^16.9.2",
         "@types/react-dom": "^16.9.0",
-        "netlify-cli": "^2.15.0",
+        "gh-pages": "^2.1.1",
         "typescript": "^3.6.3"
     }
 }
