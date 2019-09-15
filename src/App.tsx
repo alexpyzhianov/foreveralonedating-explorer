@@ -4,19 +4,7 @@ import { Post, ServerPost, serverPostToClient, filterGood } from "./shape"
 import { Storyline } from "./StoryLine"
 import styles from "./App.module.css"
 
-const updateMilestones = [
-    1000,
-    5000,
-    10000,
-    15000,
-    20000,
-    21000,
-    22000,
-    23000,
-    24000,
-    25000,
-    25742,
-]
+const updateMilestones = [1000, 5000, 10000, 25742]
 
 const fileNames = Array(64)
     .fill(0)

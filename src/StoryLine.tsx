@@ -18,13 +18,13 @@ function getEmoji(age: number, gender: Gender) {
     } else if (age < 20 && gender === "f") {
         return "👧"
     } else if (age < 40 && gender === "m") {
-        return "👨‍🦰"
+        return "👨"
     } else if (age < 40 && gender === "f") {
         return "👩"
     } else if (age < 60 && gender === "m") {
-        return "👴"
+        return "👨‍🦳"
     } else if (age < 60 && gender === "f") {
-        return "🧓"
+        return "👩‍🦳"
     } else if (gender === "f") {
         return "👵"
     } else if (gender === "m") {
@@ -110,8 +110,16 @@ export const Storyline: React.FC<StorylineProps> = React.memo(({ posts }) => {
 
             {tooltip && (
                 <Tooltip
-                    top={verticalScale(tooltip.score) + 48}
-                    left={dayScale(tooltip.createdUtc) + 48}
+                    top={
+                        verticalScale(tooltip.score) +
+                        24 +
+                        sizeScale(tooltip.comments)
+                    }
+                    left={
+                        dayScale(tooltip.createdUtc) +
+                        24 +
+                        sizeScale(tooltip.comments)
+                    }
                     comments={tooltip.comments}
                     score={tooltip.score}
                     title={tooltip.title}
