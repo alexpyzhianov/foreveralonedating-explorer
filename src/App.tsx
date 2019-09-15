@@ -2,7 +2,6 @@ import React from "react"
 import axios from "axios"
 import { Post, ServerPost, serverPostToClient, filterGood } from "./shape"
 import { Storyline } from "./StoryLine"
-import "./App.css"
 
 function App() {
     const [posts, setPosts] = React.useState<Post[]>([])
