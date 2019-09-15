@@ -36,8 +36,6 @@ export const Storyline: React.FC<StorylineProps> = ({ posts }) => {
     const daysMap = group(posts, p => startOfDay(p.createdUtc).valueOf())
     const days = Array.from(daysMap).sort(([a], [b]) => b - a)
 
-    console.log(daysMap)
-
     const commentsExtent = extent(posts, p => p.comments) as [number, number]
     const scoreExtent = extent(posts, p => p.score) as [number, number]
 
