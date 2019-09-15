@@ -34,7 +34,7 @@ function getEmoji(age: number, gender: Gender) {
     }
 }
 
-export const Storyline: React.FC<StorylineProps> = ({ posts }) => {
+export const Storyline: React.FC<StorylineProps> = React.memo(({ posts }) => {
     const containerRef = React.useRef<HTMLDivElement>(null)
     const containerSize = useComponentSize(containerRef)
     const [tooltip, setTooltip] = React.useState<Post | null>(null)
@@ -120,4 +120,4 @@ export const Storyline: React.FC<StorylineProps> = ({ posts }) => {
             )}
         </div>
     )
-}
+})

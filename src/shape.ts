@@ -21,8 +21,17 @@ export interface Post {
 
 const metaRegex = /\[([m,f])4([m,f])]/gim
 
+const blackList = [
+    "https://www.reddit.com/r/GBr4r/comments/bavsby/18_m4f_watchet_just_a_guy_looking_for_a_girl/",
+]
+
 export function filterGood(post: Post) {
-    return post.fromGender && post.toGender && post.age
+    return (
+        !blackList.includes(post.url) &&
+        post.fromGender &&
+        post.toGender &&
+        post.age
+    )
 }
 
 export function serverPostToClient(post: ServerPost): Post {
