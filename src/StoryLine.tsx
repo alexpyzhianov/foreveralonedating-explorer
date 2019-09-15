@@ -1,9 +1,9 @@
 import React from "react"
-import { group, extent } from "d3-array"
+import { group } from "d3-array"
 import startOfDay from "date-fns/startOfDay"
 import format from "date-fns/format"
 import { Post, Gender } from "./shape"
-import { scaleLinear, scaleTime } from "d3-scale"
+import { scaleLinear } from "d3-scale"
 import useComponentSize from "@rehooks/component-size"
 import styles from "./StoryLine.module.css"
 import { Tooltip } from "./Tooltip"
@@ -34,51 +34,52 @@ function getEmoji(age: number, gender: Gender) {
     }
 }
 
+interface Tooltip extends Post {
+    top: number
+    left: number
+}
+
 export const Storyline: React.FC<StorylineProps> = React.memo(({ posts }) => {
     const containerRef = React.useRef<HTMLDivElement>(null)
     const containerSize = useComponentSize(containerRef)
-    const [tooltip, setTooltip] = React.useState<Post | null>(null)
+    const [tooltip, setTooltip] = React.useState<Tooltip | null>(null)
     const daysMap = group(posts, p => startOfDay(p.createdUtc).valueOf())
     const days = Array.from(daysMap).sort(([a], [b]) => b - a)
 
-    const commentsExtent = extent(posts, p => p.comments) as [number, number]
-    const scoreExtent = extent(posts, p => p.score) as [number, number]
-
-    const dayScale = scaleTime()
-        .domain([days[0][0], days[days.length - 1][0]])
-        .range([16, days.length * 40])
+    // For consistent sizes as the data is static anyway
+    const commentsExtent = [0, 161]
+    const scoreExtent = [0, 271]
 
     const verticalScale = scaleLinear()
         .domain(scoreExtent)
-        .range([60, containerSize ? containerSize.height - 60 : 600])
+        .range([0, containerSize ? containerSize.height : 600])
 
     const sizeScale = scaleLinear()
         .domain(commentsExtent)
         .range([18, 60])
 
     return (
-        <div className={styles.storyline} ref={containerRef}>
-            {days.map(([date]) => {
-                return (
-                    <div
-                        className={styles.date}
-                        style={{ left: dayScale(date) }}
-                        key={date.toString()}
-                    >
-                        <div className={styles.year}>{format(date, "y")}</div>
-                        <div>{format(date, "MMM")}</div>
-                        <div>{format(date, "dd")}</div>
-                    </div>
-                )
-            })}
+        <div className={styles.storyline}>
+            <div className={styles.timeline}>
+                {days.map(([date]) => {
+                    return (
+                        <div
+                            className={styles.timelineTick}
+                            key={date.toString()}
+                        >
+                            <div className={styles.timelineYear}>
+                                {format(date, "y")}
+                            </div>
+                            <div>{format(date, "MMM")}</div>
+                            <div>{format(date, "dd")}</div>
+                        </div>
+                    )
+                })}
+            </div>
 
-            {days.map(([date, posts]) => {
-                return (
-                    <div
-                        key={date.toString()}
-                        className={styles.day}
-                        style={{ left: dayScale(date) }}
-                    >
+            <div className={styles.columns} ref={containerRef}>
+                {days.map(([date, posts]) => (
+                    <div key={date.toString()} className={styles.column}>
                         {posts
                             .filter(p => p.age && p.fromGender)
                             .map(p => {
@@ -86,6 +87,7 @@ export const Storyline: React.FC<StorylineProps> = React.memo(({ posts }) => {
                                     tooltip && p.url === tooltip.url
                                         ? " " + styles.selected
                                         : ""
+
                                 return (
                                     <div
                                         key={p.url}
@@ -95,7 +97,19 @@ export const Storyline: React.FC<StorylineProps> = React.memo(({ posts }) => {
                                             top: verticalScale(p.score),
                                             fontSize: sizeScale(p.comments),
                                         }}
-                                        onFocus={() => setTooltip(p)}
+                                        onFocus={e => {
+                                            const r = e.target.getBoundingClientRect()
+                                            setTooltip({
+                                                top: r.top,
+                                                left:
+                                                    document.documentElement
+                                                        .scrollLeft +
+                                                    r.left +
+                                                    r.width / 2 +
+                                                    40,
+                                                ...p,
+                                            })
+                                        }}
                                     >
                                         {getEmoji(
                                             p.age as number, // handled by filter
@@ -105,27 +119,10 @@ export const Storyline: React.FC<StorylineProps> = React.memo(({ posts }) => {
                                 )
                             })}
                     </div>
-                )
-            })}
+                ))}
+            </div>
 
-            {tooltip && (
-                <Tooltip
-                    top={
-                        verticalScale(tooltip.score) +
-                        24 +
-                        sizeScale(tooltip.comments)
-                    }
-                    left={
-                        dayScale(tooltip.createdUtc) +
-                        24 +
-                        sizeScale(tooltip.comments)
-                    }
-                    comments={tooltip.comments}
-                    score={tooltip.score}
-                    title={tooltip.title}
-                    url={tooltip.url}
-                />
-            )}
+            {tooltip && <Tooltip {...tooltip} />}
         </div>
     )
 })

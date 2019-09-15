@@ -3,6 +3,7 @@ import axios from "axios"
 import { Post, ServerPost, serverPostToClient, filterGood } from "./shape"
 import { Storyline } from "./StoryLine"
 import styles from "./App.module.css"
+import stylesSpinner from "./Spinner.module.css"
 
 const updateMilestones = [1000, 5000, 10000, 25742]
 
@@ -34,7 +35,7 @@ function App() {
     }, [buffer])
 
     return (
-        <main className={styles.appContainer}>
+        <main className={styles.app}>
             {posts.length > 0 && <Storyline posts={posts} />}
 
             {updateMilestones.length > 0 ? (
@@ -43,7 +44,7 @@ function App() {
                         {" "}
                         Loading... ({updateMilestones.length} left){" "}
                     </div>
-                    <div className={styles.heart}>
+                    <div className={stylesSpinner.heart}>
                         <div></div>
                     </div>
                 </>

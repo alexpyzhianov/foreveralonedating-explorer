@@ -1,6 +1,38 @@
 .storyline {
+    display: flex;
+    flex-direction: column;
     height: 100%;
     user-select: none;
+}
+
+/* Timeline */
+.timeline {
+    flex: none;
+    display: flex;
+}
+
+.timelineTick {
+    flex: none;
+    display: inline-block;
+    width: 48px;
+}
+
+.timelineYear {
+    opacity: 0.3;
+    font-size: 0.8em;
+}
+
+/* posts */
+.columns {
+    position: relative;
+    flex: 1;
+    display: flex;
+    margin: 4px 0 60px 0;
+}
+
+.column {
+    flex: none;
+    width: 48px;
 }
 
 .post {
@@ -22,17 +54,4 @@
 .selected {
     outline: none;
     border: 1px solid gray;
-}
-
-.day {
-    position: absolute;
-}
-
-.date {
-    position: absolute;
-}
-
-.year {
-    opacity: 0.3;
-    font-size: 0.8em;
 }
