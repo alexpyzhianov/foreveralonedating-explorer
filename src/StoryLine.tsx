@@ -90,7 +90,9 @@ export const Storyline: React.FC<StorylineProps> = ({ posts }) => {
                                     fontSize: sizeScale(p.comments),
                                 }}
                                 onFocus={() => setTooltip(p)}
-                                onBlur={() => setTooltip(null)}
+                                onBlur={() =>
+                                    setTimeout(() => setTooltip(null), 10)
+                                }
                             >
                                 {getEmoji(
                                     p.age as number, // handled by filter
@@ -103,8 +105,8 @@ export const Storyline: React.FC<StorylineProps> = ({ posts }) => {
 
             {tooltip && (
                 <Tooltip
-                    top={verticalScale(tooltip.score) + 60}
-                    left={dayScale(tooltip.createdUtc) + 60}
+                    top={verticalScale(tooltip.score) + 48}
+                    left={dayScale(tooltip.createdUtc) + 48}
                     comments={tooltip.comments}
                     score={tooltip.score}
                     title={tooltip.title}
