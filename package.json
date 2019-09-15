@@ -19,8 +19,6 @@
         "start": "react-scripts start",
         "build": "react-scripts build",
         "test": "react-scripts test",
-        "deploy": "netlify deploy",
-        "deploy:prod": "netlify deploy --prod",
         "eject": "react-scripts eject"
     },
     "eslintConfig": {

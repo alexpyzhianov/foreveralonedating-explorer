@@ -1,17 +1,9 @@
 export interface ServerPost {
-    // award: number
-    comments: number
-    createdUtc: number
-    // over18: boolean
-    // pinned: boolean
-    // pwls: number
-    score: number
-    // subs: number
-    // text: number
-    // thumbnail: string
-    title: string
-    url: string
-    // wls: number
+    c: number // comments
+    t: number // time
+    s: number // score
+    h: string // title
+    u: string // url
 }
 
 export type Gender = "m" | "f" | "r"
@@ -34,23 +26,23 @@ export function filterGood(post: Post) {
 }
 
 export function serverPostToClient(post: ServerPost): Post {
-    const titleInt = parseInt(post.title, 10)
-    const [, fromGender, toGender] = metaRegex.exec(post.title) || [
+    const titleInt = parseInt(post.h, 10)
+    const [, fromGender, toGender] = metaRegex.exec(post.h) || [
         null,
         null,
         null,
     ]
 
     return {
-        createdUtc: new Date(post.createdUtc * 1000),
+        createdUtc: new Date(post.t * 1000),
         age: titleInt >= 14 && titleInt < 150 ? titleInt : undefined,
-        score: post.score,
-        url: post.url,
+        score: post.s,
+        url: post.u,
         fromGender: fromGender
             ? (fromGender.toLowerCase() as Gender)
             : undefined,
         toGender: toGender ? (toGender.toLowerCase() as Gender) : undefined,
-        title: post.title,
-        comments: post.comments,
+        title: post.h,
+        comments: post.c,
     }
 }

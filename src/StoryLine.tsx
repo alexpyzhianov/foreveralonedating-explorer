@@ -72,36 +72,41 @@ export const Storyline: React.FC<StorylineProps> = ({ posts }) => {
                 )
             })}
 
-            {days.map(([date, posts]) => (
-                <div
-                    key={date.toString()}
-                    className={styles.day}
-                    style={{ left: dayScale(date) }}
-                >
-                    {posts
-                        .filter(p => p.age && p.fromGender)
-                        .map(p => (
-                            <div
-                                key={p.url}
-                                tabIndex={0}
-                                className={styles.post}
-                                style={{
-                                    top: verticalScale(p.score),
-                                    fontSize: sizeScale(p.comments),
-                                }}
-                                onFocus={() => setTooltip(p)}
-                                onBlur={() =>
-                                    setTimeout(() => setTooltip(null), 10)
-                                }
-                            >
-                                {getEmoji(
-                                    p.age as number, // handled by filter
-                                    p.fromGender as Gender,
-                                )}
-                            </div>
-                        ))}
-                </div>
-            ))}
+            {days.map(([date, posts]) => {
+                return (
+                    <div
+                        key={date.toString()}
+                        className={styles.day}
+                        style={{ left: dayScale(date) }}
+                    >
+                        {posts
+                            .filter(p => p.age && p.fromGender)
+                            .map(p => {
+                                const postCn =
+                                    tooltip && p.url === tooltip.url
+                                        ? " " + styles.selected
+                                        : ""
+                                return (
+                                    <div
+                                        key={p.url}
+                                        tabIndex={0}
+                                        className={styles.post + postCn}
+                                        style={{
+                                            top: verticalScale(p.score),
+                                            fontSize: sizeScale(p.comments),
+                                        }}
+                                        onFocus={() => setTooltip(p)}
+                                    >
+                                        {getEmoji(
+                                            p.age as number, // handled by filter
+                                            p.fromGender as Gender,
+                                        )}
+                                    </div>
+                                )
+                            })}
+                    </div>
+                )
+            })}
 
             {tooltip && (
                 <Tooltip
