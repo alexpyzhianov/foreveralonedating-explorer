@@ -1,0 +1,15 @@
+.timeline {
+    flex: none;
+    display: flex;
+}
+
+.tick {
+    flex: none;
+    display: inline-block;
+    width: 48px;
+}
+
+.year {
+    opacity: 0.3;
+    font-size: 0.8em;
+}

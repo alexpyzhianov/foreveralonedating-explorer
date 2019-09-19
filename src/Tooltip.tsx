@@ -33,7 +33,14 @@ export const Tooltip: React.FC<TooltipProps> = ({
                 </span>{" "}
                 {comments}
             </p>
-            <a href={url} target="_blank" rel="noopener noreferrer">
+            <a
+                href={
+                    "https://www.reddit.com/r/ForeverAloneDating/comments/" +
+                    url
+                }
+                target="_blank"
+                rel="noopener noreferrer"
+            >
                 Open the post
             </a>
         </div>

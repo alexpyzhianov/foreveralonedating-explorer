@@ -1,0 +1,20 @@
+.post {
+    position: absolute;
+    cursor: pointer;
+    font-size: 24px;
+    border-radius: 100%;
+    transition: 0.25s transform ease-in-out;
+}
+
+.post:hover,
+.post:focus,
+.selected {
+    transform: scale(2);
+    z-index: 10;
+}
+
+.post:focus,
+.selected {
+    outline: none;
+    border: 1px solid gray;
+}

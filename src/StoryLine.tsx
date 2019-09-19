@@ -1,128 +1,136 @@
 import React from "react"
-import { group } from "d3-array"
+import axios from "axios"
 import startOfDay from "date-fns/startOfDay"
-import format from "date-fns/format"
-import { Post, Gender } from "./shape"
+import { FixedSizeList as List } from "react-window"
+import InfiniteLoader from "react-window-infinite-loader"
 import { scaleLinear } from "d3-scale"
 import useComponentSize from "@rehooks/component-size"
-import styles from "./StoryLine.module.css"
 import { Tooltip } from "./Tooltip"
+import { Face } from "./Face"
+import {
+    Post,
+    ServerPost,
+    serverPostToClient,
+    filterGood,
+    TooltipState,
+} from "./shape"
+import styles from "./StoryLine.module.css"
+import { group } from "d3-array"
 
-export interface StorylineProps {
-    posts: Post[]
-}
+const commentsExtent = [0, 100]
+const scoreExtent = [0, 400]
 
-function getEmoji(age: number, gender: Gender) {
-    if (age < 20 && gender === "m") {
-        return "👦"
-    } else if (age < 20 && gender === "f") {
-        return "👧"
-    } else if (age < 40 && gender === "m") {
-        return "👨"
-    } else if (age < 40 && gender === "f") {
-        return "👩"
-    } else if (age < 60 && gender === "m") {
-        return "👨‍🦳"
-    } else if (age < 60 && gender === "f") {
-        return "👩‍🦳"
-    } else if (gender === "f") {
-        return "👵"
-    } else if (gender === "m") {
-        return "👴"
-    } else {
-        return "👽"
-    }
-}
+const sizeScale = scaleLinear()
+    .domain(commentsExtent)
+    .range([18, 60])
 
-interface Tooltip extends Post {
-    top: number
-    left: number
-}
+const fileList = Array(55)
+    .fill(0)
+    .map((_, i) => `./data/data${i}.json`)
 
-export const Storyline: React.FC<StorylineProps> = React.memo(({ posts }) => {
+type Day = [number, Post[]]
+
+const postsCache: Post[] = []
+
+export const Storyline: React.FC = () => {
     const containerRef = React.useRef<HTMLDivElement>(null)
     const containerSize = useComponentSize(containerRef)
-    const [tooltip, setTooltip] = React.useState<Tooltip | null>(null)
-    const daysMap = group(posts, p => startOfDay(p.createdUtc).valueOf())
-    const days = Array.from(daysMap).sort(([a], [b]) => b - a)
 
-    // For consistent sizes as the data is static anyway
-    const commentsExtent = [0, 161]
-    const scoreExtent = [0, 271]
+    const [tooltip, setTooltip] = React.useState<TooltipState | null>(null)
+    const [days, setDays] = React.useState<Day[]>([])
+    const [isLoading, setIsLoading] = React.useState<boolean>(false)
+
+    const loadMoreItems = React.useCallback((start: number, stop: number) => {
+        console.log(start, stop)
+        const nextFile = fileList.shift()
+        if (!nextFile) {
+            return Promise.resolve()
+        }
+
+        setIsLoading(true)
+        return axios.get<any, { data: ServerPost[] }>(nextFile).then(result => {
+            Array.prototype.push.apply(
+                postsCache,
+                result.data.map(serverPostToClient).filter(filterGood),
+            )
+            const days = Array.from(
+                group(postsCache, p => startOfDay(p.createdUtc).valueOf()),
+            )
+            setDays(days)
+            setIsLoading(false)
+        })
+    }, [])
+
+    React.useEffect(() => {
+        loadMoreItems(0, 1)
+    }, [])
 
     const verticalScale = scaleLinear()
         .domain(scoreExtent)
         .range([0, containerSize ? containerSize.height : 600])
 
-    const sizeScale = scaleLinear()
-        .domain(commentsExtent)
-        .range([18, 60])
+    const isItemLoaded = (index: number) =>
+        fileList.length === 0 || index < days.length
+    const itemCount = fileList.length > 0 ? days.length + 1 : days.length
 
     return (
-        <div className={styles.storyline}>
-            <div className={styles.timeline}>
-                {days.map(([date]) => {
-                    return (
-                        <div
-                            className={styles.timelineTick}
-                            key={date.toString()}
+        <div className={styles.storyline} ref={containerRef}>
+            {containerSize.height && (
+                <InfiniteLoader
+                    isItemLoaded={isItemLoaded}
+                    itemCount={itemCount}
+                    loadMoreItems={
+                        // isLoading
+                        //     ? (a: number, b: number) => Promise.resolve()
+                        loadMoreItems
+                    }
+                >
+                    {({ onItemsRendered, ref }) => (
+                        <List
+                            className={styles.columns}
+                            height={containerSize.height}
+                            width={containerSize.width}
+                            itemCount={itemCount}
+                            itemSize={40}
+                            layout="horizontal"
+                            onItemsRendered={onItemsRendered}
+                            ref={ref}
                         >
-                            <div className={styles.timelineYear}>
-                                {format(date, "y")}
-                            </div>
-                            <div>{format(date, "MMM")}</div>
-                            <div>{format(date, "dd")}</div>
-                        </div>
-                    )
-                })}
-            </div>
-
-            <div className={styles.columns} ref={containerRef}>
-                {days.map(([date, posts]) => (
-                    <div key={date.toString()} className={styles.column}>
-                        {posts
-                            .filter(p => p.age && p.fromGender)
-                            .map(p => {
-                                const postCn =
-                                    tooltip && p.url === tooltip.url
-                                        ? " " + styles.selected
-                                        : ""
-
-                                return (
+                            {({ index, style, isScrolling }) =>
+                                isItemLoaded(index) && !isScrolling ? (
                                     <div
-                                        key={p.url}
-                                        tabIndex={0}
-                                        className={styles.post + postCn}
-                                        style={{
-                                            top: verticalScale(p.score),
-                                            fontSize: sizeScale(p.comments),
-                                        }}
-                                        onFocus={e => {
-                                            const r = e.target.getBoundingClientRect()
-                                            setTooltip({
-                                                top: r.top,
-                                                left:
-                                                    document.documentElement
-                                                        .scrollLeft +
-                                                    r.left +
-                                                    r.width / 2 +
-                                                    40,
-                                                ...p,
-                                            })
-                                        }}
+                                        className={styles.column}
+                                        style={style}
                                     >
-                                        {getEmoji(
-                                            p.age as number, // handled by filter
-                                            p.fromGender as Gender,
-                                        )}
+                                        {days[index][1].map(p => (
+                                            <Face
+                                                key={p.url}
+                                                isSelected={Boolean(
+                                                    tooltip &&
+                                                        p.url === tooltip.url,
+                                                )}
+                                                top={verticalScale(p.score)}
+                                                fontSize={sizeScale(p.comments)}
+                                                post={p}
+                                                setTooltip={setTooltip}
+                                            />
+                                        ))}
+                                    </div>
+                                ) : (
+                                    <div
+                                        className={styles.column}
+                                        style={style}
+                                    >
+                                        "Loading..."
                                     </div>
                                 )
-                            })}
-                    </div>
-                ))}
-            </div>
+                            }
+                        </List>
+                    )}
+                </InfiniteLoader>
+            )}
 
             {tooltip && <Tooltip {...tooltip} />}
         </div>
     )
-})
+}
