@@ -29,7 +29,7 @@ export interface FaceProps {
     top: number
     fontSize: number
     post: Post
-    onFocus(e: React.FocusEvent<HTMLDivElement>): void
+    onSelect(e: React.MouseEvent<HTMLDivElement>): void
 }
 
 export const Face: React.FC<FaceProps> = ({
@@ -37,13 +37,12 @@ export const Face: React.FC<FaceProps> = ({
     top,
     fontSize,
     post,
-    onFocus,
+    onSelect,
 }) => (
     <div
-        tabIndex={0}
         className={`${styles.post} ${isSelected ? styles.selected : ""}`}
         style={{ top, fontSize }}
-        onFocus={onFocus}
+        onClick={onSelect}
     >
         {getEmoji(
             post.age as number, // handled by filter

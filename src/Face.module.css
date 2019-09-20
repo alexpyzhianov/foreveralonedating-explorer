@@ -7,13 +7,11 @@
 }
 
 .post:hover,
-.post:focus,
 .selected {
     transform: scale(2);
     z-index: 10;
 }
 
-.post:focus,
 .selected {
     outline: none;
     border: 1px solid gray;

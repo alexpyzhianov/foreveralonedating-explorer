@@ -45,7 +45,6 @@ interface RowProps {
 const Row: React.FC<RowProps> = React.memo(
     ({ style, date, posts, setTooltip, verticalScale, tooltip }) => (
         <>
-            {console.log(style)}
             <div className={styles.column} style={style}>
                 <div className={styles.tick}>
                     <div className={styles.year}>{format(date, "y")}</div>
@@ -59,8 +58,8 @@ const Row: React.FC<RowProps> = React.memo(
                         top={verticalScale(p.score)}
                         fontSize={sizeScale(p.comments)}
                         post={p}
-                        onFocus={(e: React.FocusEvent<HTMLDivElement>) => {
-                            const r = e.target.getBoundingClientRect()
+                        onSelect={(e: React.MouseEvent<HTMLDivElement>) => {
+                            const r = (e.target as any).getBoundingClientRect()
                             setTooltip({
                                 top: r.top - 40,
                                 left: r.left + r.width / 2,
@@ -105,8 +104,6 @@ export const Storyline: React.FC = () => {
         .domain(scoreExtent)
         .range([54, containerSize ? containerSize.height : 600])
 
-    console.log(verticalScale(400))
-
     const isItemLoaded = (index: number) =>
         fileList.length === 0 || index < days.length
     const itemCount = fileList.length > 0 ? days.length + 1 : days.length
@@ -128,6 +125,7 @@ export const Storyline: React.FC = () => {
                             itemSize={40}
                             layout="horizontal"
                             onItemsRendered={onItemsRendered}
+                            onScroll={() => setTooltip(null)}
                             ref={ref}
                         >
                             {({ index, style, data }) => {
