@@ -1,5 +1,5 @@
 import React from "react"
-import { Post, Gender, TooltipState } from "./shape"
+import { Post, Gender } from "./shape"
 import styles from "./Face.module.css"
 
 function getEmoji(age: number, gender: Gender) {
@@ -29,7 +29,7 @@ export interface FaceProps {
     top: number
     fontSize: number
     post: Post
-    setTooltip(tooltip: TooltipState): void
+    onFocus(e: React.FocusEvent<HTMLDivElement>): void
 }
 
 export const Face: React.FC<FaceProps> = ({
@@ -37,24 +37,13 @@ export const Face: React.FC<FaceProps> = ({
     top,
     fontSize,
     post,
-    setTooltip,
+    onFocus,
 }) => (
     <div
         tabIndex={0}
-        className={styles.post + (isSelected ? styles.selected : "")}
+        className={`${styles.post} ${isSelected ? styles.selected : ""}`}
         style={{ top, fontSize }}
-        onFocus={e => {
-            const r = e.target.getBoundingClientRect()
-            setTooltip({
-                top: r.top,
-                left:
-                    document.documentElement.scrollLeft +
-                    r.left +
-                    r.width / 2 +
-                    40,
-                ...post,
-            })
-        }}
+        onFocus={onFocus}
     >
         {getEmoji(
             post.age as number, // handled by filter

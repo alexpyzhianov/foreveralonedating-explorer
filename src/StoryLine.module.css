@@ -3,11 +3,19 @@
     height: 100%;
 }
 
-.columns {
-}
-
 .column {
     position: relative;
     display: inline-block;
     width: 48px;
+}
+
+.tick {
+    flex: none;
+    display: inline-block;
+    width: 48px;
+}
+
+.year {
+    opacity: 0.3;
+    font-size: 0.8em;
 }

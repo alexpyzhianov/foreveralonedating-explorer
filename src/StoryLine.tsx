@@ -1,10 +1,12 @@
 import React from "react"
 import axios from "axios"
-import startOfDay from "date-fns/startOfDay"
-import { FixedSizeList as List } from "react-window"
+import { FixedSizeList as List, areEqual } from "react-window"
 import InfiniteLoader from "react-window-infinite-loader"
-import { scaleLinear } from "d3-scale"
 import useComponentSize from "@rehooks/component-size"
+import startOfDay from "date-fns/startOfDay"
+import format from "date-fns/format"
+import { scaleLinear, scalePow } from "d3-scale"
+import { group } from "d3-array"
 import { Tooltip } from "./Tooltip"
 import { Face } from "./Face"
 import {
@@ -15,10 +17,9 @@ import {
     TooltipState,
 } from "./shape"
 import styles from "./StoryLine.module.css"
-import { group } from "d3-array"
 
 const commentsExtent = [0, 100]
-const scoreExtent = [0, 400]
+const scoreExtent = [0, 500]
 
 const sizeScale = scaleLinear()
     .domain(commentsExtent)
@@ -32,22 +33,61 @@ type Day = [number, Post[]]
 
 const postsCache: Post[] = []
 
+interface RowProps {
+    style: any
+    date: number
+    posts: Post[]
+    tooltip: TooltipState | null
+    setTooltip(t: TooltipState): void
+    verticalScale(v: number): number
+}
+
+const Row: React.FC<RowProps> = React.memo(
+    ({ style, date, posts, setTooltip, verticalScale, tooltip }) => (
+        <>
+            {console.log(style)}
+            <div className={styles.column} style={style}>
+                <div className={styles.tick}>
+                    <div className={styles.year}>{format(date, "y")}</div>
+                    <div>{format(date, "MMM")}</div>
+                    <div>{format(date, "dd")}</div>
+                </div>
+                {posts.map(p => (
+                    <Face
+                        key={p.url}
+                        isSelected={Boolean(tooltip && p.url === tooltip.url)}
+                        top={verticalScale(p.score)}
+                        fontSize={sizeScale(p.comments)}
+                        post={p}
+                        onFocus={(e: React.FocusEvent<HTMLDivElement>) => {
+                            const r = e.target.getBoundingClientRect()
+                            setTooltip({
+                                top: r.top - 40,
+                                left: r.left + r.width / 2,
+                                ...p,
+                            })
+                        }}
+                    />
+                ))}
+            </div>
+        </>
+    ),
+    areEqual,
+)
+
 export const Storyline: React.FC = () => {
     const containerRef = React.useRef<HTMLDivElement>(null)
     const containerSize = useComponentSize(containerRef)
 
     const [tooltip, setTooltip] = React.useState<TooltipState | null>(null)
     const [days, setDays] = React.useState<Day[]>([])
-    const [isLoading, setIsLoading] = React.useState<boolean>(false)
 
-    const loadMoreItems = React.useCallback((start: number, stop: number) => {
-        console.log(start, stop)
+    const loadMoreItems = React.useCallback(() => {
         const nextFile = fileList.shift()
         if (!nextFile) {
             return Promise.resolve()
         }
 
-        setIsLoading(true)
         return axios.get<any, { data: ServerPost[] }>(nextFile).then(result => {
             Array.prototype.push.apply(
                 postsCache,
@@ -57,17 +97,15 @@ export const Storyline: React.FC = () => {
                 group(postsCache, p => startOfDay(p.createdUtc).valueOf()),
             )
             setDays(days)
-            setIsLoading(false)
         })
     }, [])
 
-    React.useEffect(() => {
-        loadMoreItems(0, 1)
-    }, [])
-
-    const verticalScale = scaleLinear()
+    const verticalScale = scalePow()
+        .exponent(0.7)
         .domain(scoreExtent)
-        .range([0, containerSize ? containerSize.height : 600])
+        .range([54, containerSize ? containerSize.height : 600])
+
+    console.log(verticalScale(400))
 
     const isItemLoaded = (index: number) =>
         fileList.length === 0 || index < days.length
@@ -79,43 +117,30 @@ export const Storyline: React.FC = () => {
                 <InfiniteLoader
                     isItemLoaded={isItemLoaded}
                     itemCount={itemCount}
-                    loadMoreItems={
-                        // isLoading
-                        //     ? (a: number, b: number) => Promise.resolve()
-                        loadMoreItems
-                    }
+                    loadMoreItems={loadMoreItems}
                 >
                     {({ onItemsRendered, ref }) => (
                         <List
-                            className={styles.columns}
                             height={containerSize.height}
                             width={containerSize.width}
                             itemCount={itemCount}
+                            itemData={days}
                             itemSize={40}
                             layout="horizontal"
                             onItemsRendered={onItemsRendered}
                             ref={ref}
                         >
-                            {({ index, style, isScrolling }) =>
-                                isItemLoaded(index) && !isScrolling ? (
-                                    <div
-                                        className={styles.column}
+                            {({ index, style, data }) => {
+                                const [date, posts] = (data[index] || []) as Day
+                                return isItemLoaded(index) ? (
+                                    <Row
                                         style={style}
-                                    >
-                                        {days[index][1].map(p => (
-                                            <Face
-                                                key={p.url}
-                                                isSelected={Boolean(
-                                                    tooltip &&
-                                                        p.url === tooltip.url,
-                                                )}
-                                                top={verticalScale(p.score)}
-                                                fontSize={sizeScale(p.comments)}
-                                                post={p}
-                                                setTooltip={setTooltip}
-                                            />
-                                        ))}
-                                    </div>
+                                        date={date}
+                                        posts={posts}
+                                        tooltip={tooltip}
+                                        setTooltip={setTooltip}
+                                        verticalScale={verticalScale}
+                                    />
                                 ) : (
                                     <div
                                         className={styles.column}
@@ -124,7 +149,7 @@ export const Storyline: React.FC = () => {
                                         "Loading..."
                                     </div>
                                 )
-                            }
+                            }}
                         </List>
                     )}
                 </InfiniteLoader>
