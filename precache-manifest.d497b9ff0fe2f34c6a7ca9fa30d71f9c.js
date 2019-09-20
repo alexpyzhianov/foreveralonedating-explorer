@@ -1,19 +1,19 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "1f23230abd095ae1e80ab41d6c08f393",
+    "revision": "49e4a06358c5b10a27ffa69936da9815",
     "url": "/foreveralonedating-explorer/index.html"
   },
   {
-    "revision": "94a8fb2893493dc44960",
-    "url": "/foreveralonedating-explorer/static/css/main.922e696f.chunk.css"
+    "revision": "3dcfed8bdcf9c697123b",
+    "url": "/foreveralonedating-explorer/static/css/main.b3d570c6.chunk.css"
   },
   {
     "revision": "8d3b32bffa36cd94eb58",
     "url": "/foreveralonedating-explorer/static/js/2.62b48ee6.chunk.js"
   },
   {
-    "revision": "94a8fb2893493dc44960",
-    "url": "/foreveralonedating-explorer/static/js/main.2ff7bee0.chunk.js"
+    "revision": "3dcfed8bdcf9c697123b",
+    "url": "/foreveralonedating-explorer/static/js/main.0dbc91f6.chunk.js"
   },
   {
     "revision": "5ce4f6ef47e2b7525069",
