@@ -3,7 +3,6 @@ import styles from "./Tooltip.module.css"
 
 export interface TooltipProps {
     top: number
-    left: number
     title: string
     score: number
     comments: number
@@ -12,14 +11,13 @@ export interface TooltipProps {
 
 export const Tooltip: React.FC<TooltipProps> = ({
     top,
-    left,
     title,
     score,
     comments,
     url,
 }) => {
     return (
-        <div className={styles.tooltip} style={{ top, left }}>
+        <div className={styles.tooltip} style={{ top }}>
             <h4>{title}</h4>
             <p>
                 <span role="img" aria-label="post score">

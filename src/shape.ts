@@ -19,11 +19,6 @@ export interface Post {
     comments: number
 }
 
-export interface TooltipState extends Post {
-    top: number
-    left: number
-}
-
 const ageRegex = /\d\d/
 const metaRegex = /([M,F,f,m])4([M,F,f,m])/
 

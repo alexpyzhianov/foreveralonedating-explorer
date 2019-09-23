@@ -5,13 +5,11 @@
 
 .column {
     position: relative;
-    display: inline-block;
     width: 48px;
 }
 
 .tick {
     flex: none;
-    display: inline-block;
     width: 48px;
 }
 

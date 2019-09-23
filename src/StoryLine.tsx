@@ -9,13 +9,7 @@ import { scaleLinear, scalePow } from "d3-scale"
 import { group } from "d3-array"
 import { Tooltip } from "./Tooltip"
 import { Face } from "./Face"
-import {
-    Post,
-    ServerPost,
-    serverPostToClient,
-    filterGood,
-    TooltipState,
-} from "./shape"
+import { Post, ServerPost, serverPostToClient, filterGood } from "./shape"
 import styles from "./StoryLine.module.css"
 
 const commentsExtent = [0, 100]
@@ -37,13 +31,13 @@ interface RowProps {
     style: any
     date: number
     posts: Post[]
-    tooltip: TooltipState | null
-    setTooltip(t: TooltipState): void
+    selectedUrl: string
+    setSelectedUrl(url: string): void
     verticalScale(v: number): number
 }
 
 const Row: React.FC<RowProps> = React.memo(
-    ({ style, date, posts, setTooltip, verticalScale, tooltip }) => (
+    ({ style, date, posts, selectedUrl, setSelectedUrl, verticalScale }) => (
         <>
             <div className={styles.column} style={style}>
                 <div className={styles.tick}>
@@ -51,23 +45,23 @@ const Row: React.FC<RowProps> = React.memo(
                     <div>{format(date, "MMM")}</div>
                     <div>{format(date, "dd")}</div>
                 </div>
-                {posts.map(p => (
-                    <Face
-                        key={p.url}
-                        isSelected={Boolean(tooltip && p.url === tooltip.url)}
-                        top={verticalScale(p.score)}
-                        fontSize={sizeScale(p.comments)}
-                        post={p}
-                        onSelect={(e: React.MouseEvent<HTMLDivElement>) => {
-                            const r = (e.target as any).getBoundingClientRect()
-                            setTooltip({
-                                top: r.top - 40,
-                                left: r.left + r.width / 2,
-                                ...p,
-                            })
-                        }}
-                    />
-                ))}
+                {posts.map(p => {
+                    const top = verticalScale(p.score)
+                    const isSelected = p.url === selectedUrl
+                    return (
+                        <>
+                            <Face
+                                key={p.url}
+                                isSelected={isSelected}
+                                top={top}
+                                fontSize={sizeScale(p.comments)}
+                                post={p}
+                                onSelect={e => setSelectedUrl(p.url)}
+                            />
+                            {isSelected && <Tooltip top={top} {...p} />}
+                        </>
+                    )
+                })}
             </div>
         </>
     ),
@@ -78,7 +72,7 @@ export const Storyline: React.FC = () => {
     const containerRef = React.useRef<HTMLDivElement>(null)
     const containerSize = useComponentSize(containerRef)
 
-    const [tooltip, setTooltip] = React.useState<TooltipState | null>(null)
+    const [selectedUrl, setSelectedUrl] = React.useState<string>("")
     const [days, setDays] = React.useState<Day[]>([])
 
     const loadMoreItems = React.useCallback(() => {
@@ -106,6 +100,7 @@ export const Storyline: React.FC = () => {
 
     const isItemLoaded = (index: number) =>
         fileList.length === 0 || index < days.length
+
     const itemCount = fileList.length > 0 ? days.length + 1 : days.length
 
     return (
@@ -125,7 +120,6 @@ export const Storyline: React.FC = () => {
                             itemSize={40}
                             layout="horizontal"
                             onItemsRendered={onItemsRendered}
-                            onScroll={() => setTooltip(null)}
                             ref={ref}
                         >
                             {({ index, style, data }) => {
@@ -135,8 +129,8 @@ export const Storyline: React.FC = () => {
                                         style={style}
                                         date={date}
                                         posts={posts}
-                                        tooltip={tooltip}
-                                        setTooltip={setTooltip}
+                                        selectedUrl={selectedUrl}
+                                        setSelectedUrl={setSelectedUrl}
                                         verticalScale={verticalScale}
                                     />
                                 ) : (
@@ -152,8 +146,6 @@ export const Storyline: React.FC = () => {
                     )}
                 </InfiniteLoader>
             )}
-
-            {tooltip && <Tooltip {...tooltip} />}
         </div>
     )
 }
