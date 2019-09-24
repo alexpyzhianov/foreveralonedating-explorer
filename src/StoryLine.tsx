@@ -138,7 +138,7 @@ export const Storyline: React.FC = () => {
                                         className={styles.column}
                                         style={style}
                                     >
-                                        "Loading..."
+                                        "..."
                                     </div>
                                 )
                             }}

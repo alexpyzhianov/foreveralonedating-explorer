@@ -10,7 +10,7 @@ function App() {
             <p className={styles.info}>
                 Get the full{" "}
                 <a
-                    href="https://drive.google.com/open?id=1kLG9ls3zHLFy4HSKRlNdw23r-KJTiA-1"
+                    href="https://drive.google.com/open?id=1GHJROCkmbGTE6K9WfCQ8z636aGuTcqIB"
                     target="_blank"
                     rel="noopener noreferrer"
                 >
