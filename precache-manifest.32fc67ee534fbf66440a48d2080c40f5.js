@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "a4b55246a93c1d7b1a8ee7d8b8be8763",
+    "revision": "24d5b579e7af8e536274077a375060f2",
     "url": "/foreveralonedating-explorer/index.html"
   },
   {
