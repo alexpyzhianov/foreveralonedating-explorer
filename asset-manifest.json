@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/foreveralonedating-explorer/static/css/main.08e74def.chunk.css",
-    "main.js": "/foreveralonedating-explorer/static/js/main.dab23e2a.chunk.js",
-    "main.js.map": "/foreveralonedating-explorer/static/js/main.dab23e2a.chunk.js.map",
+    "main.css": "/foreveralonedating-explorer/static/css/main.b8186c05.chunk.css",
+    "main.js": "/foreveralonedating-explorer/static/js/main.19540fac.chunk.js",
+    "main.js.map": "/foreveralonedating-explorer/static/js/main.19540fac.chunk.js.map",
     "runtime~main.js": "/foreveralonedating-explorer/static/js/runtime~main.e4ed0c11.js",
     "runtime~main.js.map": "/foreveralonedating-explorer/static/js/runtime~main.e4ed0c11.js.map",
-    "static/js/2.804845db.chunk.js": "/foreveralonedating-explorer/static/js/2.804845db.chunk.js",
-    "static/js/2.804845db.chunk.js.map": "/foreveralonedating-explorer/static/js/2.804845db.chunk.js.map",
+    "static/js/2.62b48ee6.chunk.js": "/foreveralonedating-explorer/static/js/2.62b48ee6.chunk.js",
+    "static/js/2.62b48ee6.chunk.js.map": "/foreveralonedating-explorer/static/js/2.62b48ee6.chunk.js.map",
     "index.html": "/foreveralonedating-explorer/index.html",
-    "precache-manifest.0f58e28c422bb7da38192eff7570cb72.js": "/foreveralonedating-explorer/precache-manifest.0f58e28c422bb7da38192eff7570cb72.js",
+    "precache-manifest.a82756c4de14d8f9a67d508aecb976d0.js": "/foreveralonedating-explorer/precache-manifest.a82756c4de14d8f9a67d508aecb976d0.js",
     "service-worker.js": "/foreveralonedating-explorer/service-worker.js",
-    "static/css/main.08e74def.chunk.css.map": "/foreveralonedating-explorer/static/css/main.08e74def.chunk.css.map"
+    "static/css/main.b8186c05.chunk.css.map": "/foreveralonedating-explorer/static/css/main.b8186c05.chunk.css.map"
   }
 }

@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/foreveralonedating-explorer/precache-manifest.0f58e28c422bb7da38192eff7570cb72.js"
+  "/foreveralonedating-explorer/precache-manifest.a82756c4de14d8f9a67d508aecb976d0.js"
 );
 
 self.addEventListener('message', (event) => {
