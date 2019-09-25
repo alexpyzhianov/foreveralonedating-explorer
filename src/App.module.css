@@ -4,9 +4,14 @@
     padding: 24px 0;
 }
 
-.info {
+.attribution {
     position: fixed;
     bottom: 0;
     left: 24px;
     z-index: 20;
+}
+
+.attribution {
+    right: 24px;
+    text-align: right;
 }

@@ -124,9 +124,13 @@ export const Storyline: React.FC = () => {
                         >
                             {({ index, style, data }) => {
                                 const [date, posts] = (data[index] || []) as Day
+                                const updatedStyle = {
+                                    ...style,
+                                    left: (style.left as any) + 20,
+                                }
                                 return isItemLoaded(index) ? (
                                     <Row
-                                        style={style}
+                                        style={updatedStyle}
                                         date={date}
                                         posts={posts}
                                         selectedUrl={selectedUrl}
@@ -136,7 +140,7 @@ export const Storyline: React.FC = () => {
                                 ) : (
                                     <div
                                         className={styles.column}
-                                        style={style}
+                                        style={updatedStyle}
                                     >
                                         "..."
                                     </div>

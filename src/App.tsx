@@ -7,15 +7,16 @@ function App() {
         <main className={styles.app}>
             <Storyline />
 
-            <p className={styles.info}>
-                Get the full{" "}
+            <p className={styles.attribution}>
+                Built by <a href="https://pyzhianov.github.io/">Alex</a> / Get
+                the full{" "}
                 <a
                     href="https://drive.google.com/open?id=1GHJROCkmbGTE6K9WfCQ8z636aGuTcqIB"
                     target="_blank"
                     rel="noopener noreferrer"
                 >
                     dataset
-                </a>
+                </a>{" "}
             </p>
         </main>
     )
