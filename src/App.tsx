@@ -5,8 +5,6 @@ import styles from "./App.module.css"
 function App() {
     return (
         <main className={styles.app}>
-            <Storyline />
-
             <p className={styles.attribution}>
                 Built by <a href="https://pyzhianov.github.io/">Alex</a> / Get
                 the full{" "}
@@ -18,6 +16,8 @@ function App() {
                     dataset
                 </a>{" "}
             </p>
+
+            <Storyline />
         </main>
     )
 }
