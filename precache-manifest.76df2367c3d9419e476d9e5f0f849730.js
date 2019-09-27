@@ -1,10 +1,10 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "377d6e57d941d55373a24993c4898f79",
+    "revision": "4ff9dd9e17c21fe123792fe3153ec71f",
     "url": "/foreveralonedating-explorer/index.html"
   },
   {
-    "revision": "3347fb07222c2c3e7846",
+    "revision": "f9507f8be78bf7adeba8",
     "url": "/foreveralonedating-explorer/static/css/main.bed15a82.chunk.css"
   },
   {
@@ -12,8 +12,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/foreveralonedating-explorer/static/js/2.3fda86f5.chunk.js"
   },
   {
-    "revision": "3347fb07222c2c3e7846",
-    "url": "/foreveralonedating-explorer/static/js/main.9372edf7.chunk.js"
+    "revision": "f9507f8be78bf7adeba8",
+    "url": "/foreveralonedating-explorer/static/js/main.c2276d2e.chunk.js"
   },
   {
     "revision": "5ce4f6ef47e2b7525069",
