@@ -1,6 +1,6 @@
 {
   "files": {
-    "main.css": "/foreveralonedating-explorer/static/css/main.e024b7f3.chunk.css",
+    "main.css": "/foreveralonedating-explorer/static/css/main.ff4f6539.chunk.css",
     "main.js": "/foreveralonedating-explorer/static/js/main.64afc8e1.chunk.js",
     "main.js.map": "/foreveralonedating-explorer/static/js/main.64afc8e1.chunk.js.map",
     "runtime~main.js": "/foreveralonedating-explorer/static/js/runtime~main.e4ed0c11.js",
@@ -8,8 +8,8 @@
     "static/js/2.e79f8ae4.chunk.js": "/foreveralonedating-explorer/static/js/2.e79f8ae4.chunk.js",
     "static/js/2.e79f8ae4.chunk.js.map": "/foreveralonedating-explorer/static/js/2.e79f8ae4.chunk.js.map",
     "index.html": "/foreveralonedating-explorer/index.html",
-    "precache-manifest.71f7a66eeb452c956ebd12a79334cfc0.js": "/foreveralonedating-explorer/precache-manifest.71f7a66eeb452c956ebd12a79334cfc0.js",
+    "precache-manifest.f0f76ee1fe33aa7da4d2d88c791d4723.js": "/foreveralonedating-explorer/precache-manifest.f0f76ee1fe33aa7da4d2d88c791d4723.js",
     "service-worker.js": "/foreveralonedating-explorer/service-worker.js",
-    "static/css/main.e024b7f3.chunk.css.map": "/foreveralonedating-explorer/static/css/main.e024b7f3.chunk.css.map"
+    "static/css/main.ff4f6539.chunk.css.map": "/foreveralonedating-explorer/static/css/main.ff4f6539.chunk.css.map"
   }
 }
