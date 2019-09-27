@@ -153,8 +153,13 @@ export const Storyline: React.FC = () => {
                             layout="horizontal"
                             overscanCount={2}
                             onItemsRendered={props => {
-                                const [date] = days[props.visibleStartIndex]
-                                    ? days[props.visibleStartIndex]
+                                const center = Math.round(
+                                    (props.visibleStopIndex +
+                                        props.visibleStartIndex) /
+                                        2,
+                                )
+                                const [date] = days[center]
+                                    ? days[center]
                                     : [null]
 
                                 onItemsRendered(props)

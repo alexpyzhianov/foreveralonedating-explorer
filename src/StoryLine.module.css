@@ -27,22 +27,23 @@
 
 .year,
 .fixedYear {
-    opacity: 0.7;
+    opacity: 0.9;
     font-size: 0.8em;
 }
 
 .fixedMonth,
 .fixedYear {
     position: fixed;
-    left: 16px;
-    background: rgba(255, 255, 255, 0.9);
-    padding: 4px;
+    left: 50%;
+    transform: translate(-50%, 0);
+    background: rgba(232, 232, 232, 0.8);
+    padding: 1px 4px;
 }
 
 .fixedYear {
-    top: 14.5px;
+    top: 17px;
 }
 
 .fixedMonth {
-    top: 33.5px;
+    top: 36px;
 }
