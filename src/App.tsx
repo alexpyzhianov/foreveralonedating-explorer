@@ -5,19 +5,24 @@ import styles from "./App.module.css"
 function App() {
     return (
         <main className={styles.app}>
-            <p className={styles.attribution}>
-                Built by <a href="https://pyzhianov.github.io/">Alex</a> / Get
-                the full{" "}
-                <a
-                    href="https://drive.google.com/open?id=1GHJROCkmbGTE6K9WfCQ8z636aGuTcqIB"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                >
-                    dataset
-                </a>{" "}
-            </p>
-
             <Storyline />
+
+            <div className={styles.attribution}>
+                <p>
+                    Get the full{" "}
+                    <a
+                        href="https://drive.google.com/open?id=1GHJROCkmbGTE6K9WfCQ8z636aGuTcqIB"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        dataset
+                    </a>{" "}
+                </p>
+                <p>
+                    <a href="https://pyzhianov.github.io/">Contact</a> the
+                    developer
+                </p>
+            </div>
         </main>
     )
 }

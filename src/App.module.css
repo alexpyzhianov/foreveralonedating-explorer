@@ -1,11 +1,21 @@
 .app {
     width: 100%;
     height: 100vh;
+    padding: 20px 0;
 }
 
 .attribution {
+    position: fixed;
     right: 20px;
     text-align: right;
-    position: fixed;
     bottom: 0;
+    margin-bottom: 20px;
+}
+
+.attribution > p:first-child {
+    margin: 0 0 4px 0;
+}
+
+.attribution > p:last-child {
+    margin: 0;
 }
