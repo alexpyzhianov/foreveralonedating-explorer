@@ -4,7 +4,6 @@ import { FixedSizeList as List, areEqual } from "react-window"
 import InfiniteLoader from "react-window-infinite-loader"
 import useComponentSize from "@rehooks/component-size"
 import startOfDay from "date-fns/startOfDay"
-import differenceInCalendarDays from "date-fns/differenceInCalendarDays"
 import startOfMonth from "date-fns/startOfMonth"
 import startOfYear from "date-fns/startOfYear"
 import isSameDay from "date-fns/isSameDay"
@@ -30,16 +29,6 @@ const fileList = Array(55)
 type Day = [number, Post[]]
 
 const postsCache: Post[] = []
-
-function shouldHideYear(timestamp: number) {
-    const diff = differenceInCalendarDays(timestamp, startOfYear(timestamp))
-    return diff < 3 || diff > 363
-}
-
-function shouldHideMonth(timestamp: number) {
-    const diff = differenceInCalendarDays(timestamp, startOfMonth(timestamp))
-    return diff < 3 || diff > 29
-}
 
 interface RowProps {
     style: any
@@ -133,24 +122,14 @@ export const Storyline: React.FC = () => {
 
     const maybeUpdateLeftBound = React.useCallback(
         (timestamp: number) => {
-            const hideYear = shouldHideYear(timestamp)
-            const hideMonth = shouldHideMonth(timestamp)
             const year = format(timestamp, "y")
             const month = format(timestamp, "MMMM")
 
             const isChange =
-                (!leftBound.month && !hideMonth) ||
-                (!leftBound.year && !hideYear) ||
-                (leftBound.month && hideMonth) ||
-                (leftBound.year && hideYear) ||
-                year !== leftBound.year ||
-                month !== leftBound.month
+                year !== leftBound.year || month !== leftBound.month
 
             if (isChange) {
-                setLeftBound({
-                    year: hideYear ? "" : year,
-                    month: hideMonth ? "" : month,
-                })
+                setLeftBound({ year, month })
             }
         },
         [leftBound],

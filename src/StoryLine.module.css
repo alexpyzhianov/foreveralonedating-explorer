@@ -17,11 +17,12 @@
     height: 60px;
 }
 
-.year,
+.year {
+    margin-bottom: 4px;
+}
+
 .month {
-    background: white;
-    padding: 4px;
-    margin: 0 -4px;
+    margin-bottom: 6px;
 }
 
 .year,
@@ -33,13 +34,15 @@
 .fixedMonth,
 .fixedYear {
     position: fixed;
-    left: 20px;
+    left: 16px;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 4px;
 }
 
 .fixedYear {
-    top: 20px;
+    top: 14.5px;
 }
 
 .fixedMonth {
-    top: 38px;
+    top: 33.5px;
 }
