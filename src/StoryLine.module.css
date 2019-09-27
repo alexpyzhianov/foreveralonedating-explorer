@@ -10,10 +10,36 @@
 
 .tick {
     flex: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
     width: 48px;
+    height: 60px;
 }
 
-.year {
-    opacity: 0.3;
+.year,
+.month {
+    background: white;
+    padding: 4px;
+    margin: 0 -4px;
+}
+
+.year,
+.fixedYear {
+    opacity: 0.7;
     font-size: 0.8em;
+}
+
+.fixedMonth,
+.fixedYear {
+    position: fixed;
+    left: 20px;
+}
+
+.fixedYear {
+    top: 20px;
+}
+
+.fixedMonth {
+    top: 38px;
 }

@@ -4,6 +4,10 @@ import { FixedSizeList as List, areEqual } from "react-window"
 import InfiniteLoader from "react-window-infinite-loader"
 import useComponentSize from "@rehooks/component-size"
 import startOfDay from "date-fns/startOfDay"
+import differenceInCalendarDays from "date-fns/differenceInCalendarDays"
+import startOfMonth from "date-fns/startOfMonth"
+import startOfYear from "date-fns/startOfYear"
+import isSameDay from "date-fns/isSameDay"
 import format from "date-fns/format"
 import { scaleLinear, scalePow } from "d3-scale"
 import { group } from "d3-array"
@@ -27,6 +31,16 @@ type Day = [number, Post[]]
 
 const postsCache: Post[] = []
 
+function shouldHideYear(timestamp: number) {
+    const diff = differenceInCalendarDays(timestamp, startOfYear(timestamp))
+    return diff < 3 || diff > 363
+}
+
+function shouldHideMonth(timestamp: number) {
+    const diff = differenceInCalendarDays(timestamp, startOfMonth(timestamp))
+    return diff < 3 || diff > 29
+}
+
 interface RowProps {
     style: any
     date: number
@@ -37,38 +51,52 @@ interface RowProps {
 }
 
 const Row: React.FC<RowProps> = React.memo(
-    ({ style, date, posts, selectedUrl, setSelectedUrl, verticalScale }) => (
-        <>
-            <div className={styles.column} style={style}>
-                <div className={styles.tick}>
-                    <div className={styles.year}>{format(date, "y")}</div>
-                    <div>{format(date, "MMM")}</div>
-                    <div>{format(date, "dd")}</div>
+    ({ style, date, posts, selectedUrl, setSelectedUrl, verticalScale }) => {
+        const year = isSameDay(date, startOfYear(date))
+            ? format(date, "y")
+            : null
+
+        const month = isSameDay(date, startOfMonth(date))
+            ? format(date, "MMMM")
+            : null
+
+        return (
+            <>
+                <div className={styles.column} style={style}>
+                    <div className={styles.tick}>
+                        {year && <div className={styles.year}>{year}</div>}
+                        {month && <div className={styles.month}>{month}</div>}
+                        <div>{format(date, "dd")}</div>
+                    </div>
+                    {posts.map(p => {
+                        const top = verticalScale(p.score)
+                        const isSelected = p.url === selectedUrl
+                        return (
+                            <>
+                                <Face
+                                    key={p.url}
+                                    isSelected={isSelected}
+                                    top={top}
+                                    fontSize={sizeScale(p.comments)}
+                                    post={p}
+                                    onSelect={e => setSelectedUrl(p.url)}
+                                />
+                                {isSelected && <Tooltip top={top} {...p} />}
+                            </>
+                        )
+                    })}
                 </div>
-                {posts.map(p => {
-                    const top = verticalScale(p.score)
-                    const isSelected = p.url === selectedUrl
-                    return (
-                        <>
-                            <Face
-                                key={p.url}
-                                isSelected={isSelected}
-                                top={top}
-                                fontSize={sizeScale(p.comments)}
-                                post={p}
-                                onSelect={e => setSelectedUrl(p.url)}
-                            />
-                            {isSelected && <Tooltip top={top} {...p} />}
-                        </>
-                    )
-                })}
-            </div>
-        </>
-    ),
+            </>
+        )
+    },
     areEqual,
 )
 
 export const Storyline: React.FC = () => {
+    const [leftBound, setLeftBound] = React.useState({
+        year: "2019",
+        month: "September",
+    })
     const containerRef = React.useRef<HTMLDivElement>(null)
     const containerSize = useComponentSize(containerRef)
 
@@ -96,12 +124,37 @@ export const Storyline: React.FC = () => {
     const verticalScale = scalePow()
         .exponent(0.7)
         .domain(scoreExtent)
-        .range([54, containerSize ? containerSize.height : 600])
+        .range([64, containerSize ? containerSize.height : 600])
 
     const isItemLoaded = (index: number) =>
         fileList.length === 0 || index < days.length
 
     const itemCount = fileList.length > 0 ? days.length + 1 : days.length
+
+    const maybeUpdateLeftBound = React.useCallback(
+        (timestamp: number) => {
+            const hideYear = shouldHideYear(timestamp)
+            const hideMonth = shouldHideMonth(timestamp)
+            const year = format(timestamp, "y")
+            const month = format(timestamp, "MMMM")
+
+            const isChange =
+                (!leftBound.month && !hideMonth) ||
+                (!leftBound.year && !hideYear) ||
+                (leftBound.month && hideMonth) ||
+                (leftBound.year && hideYear) ||
+                year !== leftBound.year ||
+                month !== leftBound.month
+
+            if (isChange) {
+                setLeftBound({
+                    year: hideYear ? "" : year,
+                    month: hideMonth ? "" : month,
+                })
+            }
+        },
+        [leftBound],
+    )
 
     return (
         <div className={styles.storyline} ref={containerRef}>
@@ -119,7 +172,18 @@ export const Storyline: React.FC = () => {
                             itemData={days}
                             itemSize={40}
                             layout="horizontal"
-                            onItemsRendered={onItemsRendered}
+                            overscanCount={2}
+                            onItemsRendered={props => {
+                                const [date] = days[props.visibleStartIndex]
+                                    ? days[props.visibleStartIndex]
+                                    : [null]
+
+                                onItemsRendered(props)
+
+                                if (date) {
+                                    maybeUpdateLeftBound(date)
+                                }
+                            }}
                             ref={ref}
                         >
                             {({ index, style, data }) => {
@@ -150,6 +214,10 @@ export const Storyline: React.FC = () => {
                     )}
                 </InfiniteLoader>
             )}
+
+            <div className={styles.fixedYear}>{leftBound.year}</div>
+
+            <div className={styles.fixedMonth}>{leftBound.month}</div>
         </div>
     )
 }
