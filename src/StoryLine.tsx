@@ -83,8 +83,8 @@ const Row: React.FC<RowProps> = React.memo(
 
 export const Storyline: React.FC = () => {
     const [leftBound, setLeftBound] = React.useState({
-        year: "2019",
-        month: "September",
+        year: "",
+        month: "",
     })
     const containerRef = React.useRef<HTMLDivElement>(null)
     const containerSize = useComponentSize(containerRef)
@@ -185,14 +185,7 @@ export const Storyline: React.FC = () => {
                                         setSelectedUrl={setSelectedUrl}
                                         verticalScale={verticalScale}
                                     />
-                                ) : (
-                                    <div
-                                        className={styles.column}
-                                        style={updatedStyle}
-                                    >
-                                        "..."
-                                    </div>
-                                )
+                                ) : null
                             }}
                         </List>
                     )}
